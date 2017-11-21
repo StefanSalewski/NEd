@@ -1,0 +1,13 @@
+### http://blog.borovsak.si/2009/09/glade3-tutorial-6-signals.html
+### http://stackoverflow.com/questions/9089592/how-do-i-connect-gtkaction-signal
+
+rm -rf nimcache/
+rm resources.o
+glib-compile-schemas .
+glib-compile-resources ned.gresource.xml --target=resources.c --generate-source
+mkdir nimcache
+#gcc -O2 -c `pkg-config --libs --cflags gtk+-3.0 gmodule-export-2.0` resources.c
+gcc -O2 -c `pkg-config --libs --cflags gtk+-3.0` resources.c
+#nim c -d:release --passL:-lgio-2.0 --passL:-lgmodule-2.0 --passL:-rdynamic --passC:-lgmodule-2.0 --passC:-Wl,--export-dynamic ned.nim
+nim c --threads:on --passL:-lgio-2.0 --passL:-rdynamic ned.nim
+

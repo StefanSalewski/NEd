@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  https://developer.gnome.org/gtksourceview/unstable/lang-reference.html
+  language definition file for Nim and GtkSourceView
+  S. Salewski 29-NOV-2016
+  License: GPL
+
+  works best when indent step is 2 spaces, I got it not really working fine for arbitrary steps
+  alternate version: https://github.com/nim-lang/Aporia/tree/master/share
+-->
+
+<language id="nim" _name="Nim" version="2.0" _section="Sources">
+  <metadata>
+    <property name="mimetypes">text/x-nim;application/x-nim</property>
+    <property name="globs">*.nim</property>
+    <property name="line-comment-start">#</property>
+  </metadata>
+
+  <!-- the predefined styles -->
+  <styles>
+    <style id="comment" _name="comment" map-to="def:comment"/>
+    <style id="shebang" _name="shebang" map-to="def:shebang"/>
+    <style id="doc-comment" _name="doc-comment" map-to="def:doc-comment"/>
+    <style id="doc-comment-element" _name="doc-comment-element" map-to="def:doc-comment-element"/>
+    <style id="constant" _name="constant" map-to="def:constant"/>
+    <style id="character" _name="character" map-to="def:character"/>
+    <style id="string" _name="string" map-to="def:string"/>
+    <style id="special-char" _name="special-char" map-to="def:special-char"/>
+    <style id="number" _name="number" map-to="def:number"/>
+    <style id="floating-point" _name="floating-point" map-to="def:floating-point"/>
+    <style id="decimal" _name="decimal" map-to="def:decimal"/>
+    <style id="base-n-integer" _name="base-n-integer" map-to="def:base-n-integer"/>
+    <style id="complex" _name="complex" map-to="def:complex"/>
+    <style id="special-constant" _name="special-constant" map-to="def:special-constant"/>
+    <style id="boolean" _name="boolean" map-to="def:boolean"/>
+    <style id="identifier" _name="identifier" map-to="def:identifier"/>
+    <style id="function" _name="function" map-to="def:function"/>
+    <style id="builtin" _name="builtin" map-to="def:builtin"/>
+    <style id="statement" _name="statement" map-to="def:statement"/>
+    <style id="operator" _name="operator" map-to="def:operator"/>
+    <style id="keyword" _name="keyword" map-to="def:keyword"/>
+    <style id="type" _name="type" map-to="def:type"/>
+    <style id="preprocessor" _name="preprocessor" map-to="def:preprocessor"/>
+    <style id="error" _name="error" map-to="def:error"/>
+    <style id="warning" _name="warning" map-to="def:warning"/>
+    <style id="reserved" _name="reserved" map-to="def:reserved"/>
+    <style id="note" _name="note" map-to="def:note"/>
+    <style id="underlined" _name="underlined" map-to="def:underlined"/>
+
+    <!-- custom Nim styles -->
+    <style id="plain-text" _name="plain-text" map-to="def:identifier"/>
+    <style id="format" _name="String interpolation %" map-to="def:special-char"/>
+    <style id="escaped-char" _name="Escaped Char" map-to="def:special-char"/>
+    <style id="pragma" _name="pragma" map-to="def:keyword"/>
+    <style id="multiline-string" _name="Multiline string" map-to="def:string"/>
+    <style id="call" _name="call" map-to="def:preprocessor"/>
+    <style id="pascal" _name="pascal" map-to="def:builtin"/>
+    <style id="typedecl" _name="typedecl" map-to="nim:pascal"/>
+    <style id="indent" _name="indent" map-to="def:reserved"/>
+    <style id="procdecl" _name="procdecl" map-to="nim:call"/>
+    <style id="qualifier" _name="qualifier" map-to="def:statement"/>
+    <style id="bracket" _name="bracket"/>
+    <style id="ws" _name="ws"/>
+  </styles>
+
+  <definitions>
+
+    <define-regex id="ind">\s\s</define-regex>
+    <!-- Nim identifier, maybe enclosed in ``, starting lower or upper case -->
+    <define-regex id="nid">(?:[a-zA-Z]\w+)|(?:`[a-zA-Z]\w+`)</define-regex>
+    <define-regex id="nidl">(?:[a-z]\w+)|(?:`[a-z]\w+`)</define-regex>
+    <define-regex id="nidu">(?:[A-Z]\w+)|(?:`[A-Z]\w+`)</define-regex>
+    <define-regex id="proc-keys">proc|func|method|iterator|converter|template|macro</define-regex>
+    <define-regex id="cmd-call-space">\s+[\-+'"^]</define-regex>
+
+    <!-- http://nim-lang.org/docs/manual.html#types-pre-defined-floating-point-types -->
+    <define-regex id="hexdigit">\d|[A-Fa-f]</define-regex>
+    <define-regex id="decdigit">\d</define-regex>
+    <define-regex id="octdigit">[0-7]</define-regex>
+    <define-regex id="bindigit">[01]</define-regex>
+    <define-regex id="hex_lit">0[xX]\%{hexdigit}(_?\%{hexdigit})*</define-regex>
+    <define-regex id="oct_lit">0[ocC]\%{octdigit}(_?\%{octdigit})*</define-regex>
+    <define-regex id="bin_lit">0[bB]\%{bindigit}(_?\%{bindigit})*</define-regex>
+    <define-regex id="dec_lit">\%{decdigit}(_?\%{decdigit})*</define-regex>
+    <define-regex id="int_lit">\%{hex_lit}|\%{dec_lit}|\%{oct_lit}|\%{bin_lit}</define-regex>
+    <define-regex id="exponent">[eE](\+|-)?\d(_?\d)*</define-regex>
+    <define-regex id="float_lit">\%{dec_lit}((\.(_?\%{decdigit})*\%{exponent}?)|\%{exponent})</define-regex>
+
+    <context id="int0_lit" style-ref="decimal">
+      <match>(?&lt;![\w\.])\%{int_lit}(?![\w\.])</match>
+    </context>
+
+    <context id="int120_lit" style-ref="decimal">
+      <match>(?&lt;![\w\.])\%{int_lit}'?[iI]((8)|(16)|(32)|(64))(?![\w\.])</match>
+    </context>
+
+    <context id="uint120_lit" style-ref="decimal">
+      <match>(?&lt;![\w\.])\%{int_lit}'?[uU]((8)|(16)|(32)|(64))(?![\w\.])</match>
+    </context>
+
+    <context id="float0_lit" style-ref="decimal">
+      <match>(?&lt;![\w\.])\%{float_lit}(?![\w\.])</match>
+    </context>
+
+    <define-regex id="float32_suffix">[fF]32</define-regex>
+    <define-regex id="float64_suffix">([fF]64)|d|D</define-regex>
+
+    <context id="float32_lit" style-ref="decimal">
+      <match>(?&lt;![\w\.])(\%{hex_lit}'\%{float32_suffix})|(\%{float_lit}|\%{dec_lit}|\%{oct_lit}|\%{bin_lit})'?\%{float32_suffix}(?![\w\.])</match>
+    </context>
+
+    <context id="float64_lit" style-ref="decimal">
+      <match>(?&lt;![\w\.])(\%{hex_lit}'\%{float64_suffix})|(\%{float_lit}|\%{dec_lit}|\%{oct_lit}|\%{bin_lit})'?\%{float64_suffix}(?![\w\.])</match>
+    </context>
+
+    <context id="format" style-ref="format" extend-parent="false">
+      <match>(?&lt;![\$])\$(#|\d+|\w+)</match>
+    </context>
+
+    <!-- http://nim-lang.org/docs/manual.html#lexical-analysis-string-literals -->
+    <context id="escaped-char" style-ref="escaped-char">
+      <match extended="true">(?i)
+        \\(                # leading backslash
+        [\\'"nrclfeabvt] | # single escaped char
+        x[\da-f]{1,2} |    # \xhh - character with hex value hh
+        \d+                # \ooo - character with decimal value ooo
+        )
+      </match>
+    </context>
+
+    <context id="single-quoted-char" style-ref="string" >
+      <match>(?i)'.'|'(\\[\\'"rclfeabvt]|\\x[\da-f]{1,2}|\d+)'</match>
+      <include>
+        <context sub-pattern="1" style-ref="escaped-char"/>
+      </include>
+    </context>
+
+    <context id="double-quoted-string" style-ref="string" end-at-line-end="true">
+      <start>"</start>
+      <end>"</end>
+      <include>
+        <context ref="format"/>
+        <context ref="escaped-char"/>
+      </include>
+    </context>
+
+    <context id="double-quoted-raw-string" style-ref="string" end-at-line-end="true">
+      <start>[rR]"</start>
+      <end>"</end>
+      <include>
+        <context ref="format"/>
+      </include>
+    </context>
+
+    <context id="multiline-triple-quoted-string" style-ref="multiline-string">
+      <start>\"\"\"</start>
+      <end>\"\"\"</end>
+      <include>
+        <context ref="format"/>
+      </include>
+    </context>
+
+    <context id="comment" style-ref="comment">
+      <start>#</start>
+      <end>$</end>
+      <include>
+        <context ref="def:in-comment"/>
+      </include>
+    </context>
+
+    <context id="comment-noext" style-ref="comment" extend-parent="false">
+      <start>#</start>
+      <end>$</end>
+      <include>
+        <context ref="def:in-comment"/>
+      </include>
+    </context>
+
+    <context id="multiline-comment" style-ref="comment" class="comment" class-disabled="no-spell-check">
+      <start>#\[</start>
+      <end>\]#</end>
+      <include>
+        <context ref="multiline-comment"/>
+        <context ref="def:in-comment"/>
+      </include>
+    </context>
+
+    <context id="boolean" style-ref="boolean">
+      <keyword>false</keyword>
+      <keyword>true</keyword>
+      <keyword>nil</keyword>
+    </context>
+
+    <!-- we may highlight each allowed pragma itself, but there are many -->
+    <context id="pragma" style-ref="pragma">
+      <match>{\..*\.}</match>
+    </context>
+
+    <context id="newtype" style-ref="pascal">
+      <match>\%{nidu}</match>
+    </context>
+
+    <context id="error" style-ref="error">
+      <match>(\t|__+|\b_|_\b)</match>
+    </context>
+
+    <!-- unused, not nice while editing -->
+    <context id="ws" style-ref="ws">
+      <match>(\s+$)|(^\s+$)</match>
+    </context>
+
+    <context id="types" style-ref="type">
+      <keyword>u?int(8|16|32|64)?</keyword>
+      <keyword>cu?int</keyword>
+      <keyword>cu?long</keyword>
+      <keyword>float(32|64)?</keyword>
+      <keyword>bool</keyword>
+      <keyword>char</keyword>
+      <keyword>enum</keyword>
+      <keyword>set</keyword>
+      <keyword>c?string</keyword>
+      <keyword>array</keyword>
+      <keyword>seq</keyword>
+      <keyword>varargs</keyword>
+      <keyword>tupel</keyword>
+      <keyword>object</keyword>
+      <keyword>void</keyword>
+      <keyword>auto</keyword>
+    </context>
+
+    <!--
+    type
+      Dog = object of Animal
+
+      we may have something like this for const and var sections and maybe for procs
+      section is indented two units more than type keyword itself
+    -->
+    <context id="type-decls">
+      <start>^(\s*)(type)$</start>
+      <end>^(?!((\%{1@start}\s\s)|(\s*$)))</end>
+      <include>
+        <context ref="comment-noext"/>
+        <!--context style-ref="typedecl" extend-parent="false">
+          <match>^\s*\%{nid}</match>
+        </context-->
+        <!--context ref="used-types"/-->
+        <context ref="newtype"/>
+        <!--context ref="types"/-->
+        <!--context where="start" sub-pattern="2" style-ref="keyword"/-->
+      </include>
+    </context>
+
+    <!-- http://nim-lang.org/docs/manual.html#lexical-analysis-operators -->
+    <context id="operators" style-ref="operator">
+      <match>[&lt;&gt;&amp;\-=+*/@$~%|!?^.:\\]|\b(and|or|not|xor|shl|shr|div|mod|in|notin|is|isnot|of)\b</match>
+    </context>
+
+    <!-- http://nim-lang.org/docs/manual.html#lexical-analysis-other-tokens -->
+    <context id="brackets" style-ref="bracket">
+      <match>[[\](){}]</match>
+    </context>
+
+    <!-- echo "hello" -->
+    <context id="command" style-ref="call">
+      <match>\%{nidl}(?=\%{cmd-call-space})</match>
+    </context>
+
+    <!-- strutils.`len`("xx") -->
+    <context id="call">
+      <match>(\%{nidl}\.)?(\%{nidl})(?=(\s*(\[.*\]\s*)?\()|"|')</match>
+      <include>
+        <context sub-pattern="2" style-ref="call"/>
+      </include>
+    </context>
+
+    <context id="typecon">
+      <match>(\%{nidl}\.)?(\%{nidu})(?=(\s*\(|\.))</match>
+      <include>
+        <context sub-pattern="1" style-ref="qualifier"/>
+        <context sub-pattern="2" style-ref="pascal"/>
+      </include>
+    </context>
+
+    <!-- ptr gtk3.Button -->
+    <context id="used-types" style-ref="plain-text">
+     <match>((:)|(object of|ptr|ref)) (\%{nidl}\.)?(\%{nidu})</match>
+      <include>
+        <context sub-pattern="2" style-ref="operator"/>
+        <context sub-pattern="3" style-ref="keyword"/>
+        <context sub-pattern="4" style-ref="qualifier"/>
+        <context sub-pattern="5" style-ref="pascal"/>
+      </include>
+    </context>
+
+    <!-- enum -->
+    <context id="enum" style-ref="keyword">
+      <match>(enum|tuple|object)</match>
+    </context>
+
+    <!-- line.`len` looks like system.quit -->
+    <context id="qualified-method-calls" style-ref="plain-text">
+      <match>(\%{nid}\.)\%{nid}</match>
+      <include>
+        <context sub-pattern="1" style-ref="plain-text"/>
+      </include>
+    </context>
+
+		<!--
+    <context id="indent-pat0">
+      <match>^\s{15}\s*</match>
+    </context>
+
+    <context id="indent-pat12" style-ref="indent">
+      <match>(?&lt;=(^          ))(  )</match>
+    </context>
+
+    <context id="indent-pat8" style-ref="indent">
+      <match>(?&lt;=(^      ))(  )</match>
+    </context>
+
+    <context id="indent-pat4" style-ref="indent">
+      this seems not to work, why?
+      <match>(?&lt;=(^\w{ind}))(\w{ind})</match>
+      <match>(?&lt;=(^  ))(  )</match>
+		</context>
+		-->
+
+    <context id="addrcast" style-ref="error" >
+      <keyword>addr</keyword>
+    </context>
+
+    <context id="cast" style-ref="error">
+      <match>cast\[(\%{nid}\.)?(\%{nid})\]\((\%{nid}\.)?(\%{nid})\)</match>
+      <include>
+        <context sub-pattern="1" style-ref="qualifier"/>
+        <context sub-pattern="2" style-ref="type"/>
+        <context sub-pattern="3" style-ref="plain-text"/>
+        <context sub-pattern="4" style-ref="plain-text"/>
+      </include>
+    </context>
+
+    <context id="keywords" style-ref="keyword" >
+      <!--<keyword>addr</keyword>-->
+      <keyword>and</keyword>
+      <keyword>as</keyword>
+      <keyword>asm</keyword>
+      <keyword>atomic</keyword>
+      <keyword>bind</keyword>
+      <keyword>block</keyword>
+      <keyword>break</keyword>
+      <keyword>case</keyword>
+      <!--<keyword>cast</keyword>-->
+      <keyword>concept</keyword>
+      <keyword>const</keyword>
+      <keyword>continue</keyword>
+      <keyword>converter</keyword>
+      <keyword>defer</keyword>
+      <keyword>discard</keyword>
+      <keyword>distinct</keyword>
+      <keyword>div</keyword>
+      <keyword>do</keyword>
+      <keyword>elif</keyword>
+      <keyword>else</keyword>
+      <keyword>end</keyword>
+      <keyword>enum</keyword>
+      <keyword>except</keyword>
+      <keyword>export</keyword>
+      <keyword>finally</keyword>
+      <keyword>for</keyword>
+      <keyword>from</keyword>
+      <keyword>func</keyword>
+      <keyword>generic</keyword>
+      <keyword>if</keyword>
+      <keyword>import</keyword>
+      <keyword>in</keyword>
+      <keyword>include</keyword>
+      <keyword>interface</keyword>
+      <keyword>is</keyword>
+      <keyword>isnot</keyword>
+      <keyword>iterator</keyword>
+      <keyword>let</keyword>
+      <keyword>macro</keyword>
+      <keyword>method</keyword>
+      <keyword>mixin</keyword>
+      <keyword>mod</keyword>
+      <keyword>nil</keyword>
+      <keyword>not</keyword>
+      <keyword>notin</keyword>
+      <keyword>object</keyword>
+      <keyword>of</keyword>
+      <keyword>or</keyword>
+      <keyword>out</keyword>
+      <keyword>proc</keyword>
+      <keyword>ptr</keyword>
+      <keyword>raise</keyword>
+      <keyword>ref</keyword>
+      <keyword>return</keyword>
+      <keyword>shl</keyword>
+      <keyword>shr</keyword>
+      <keyword>static</keyword>
+      <keyword>template</keyword>
+      <keyword>try</keyword>
+      <keyword>tuple</keyword>
+      <keyword>type</keyword>
+      <keyword>using</keyword>
+      <keyword>var</keyword>
+      <keyword>when</keyword>
+      <keyword>while</keyword>
+      <keyword>with</keyword>
+      <keyword>without</keyword>
+      <keyword>xor</keyword>
+      <keyword>yield</keyword>
+      
+      <!-- we add these here -->
+      <keyword>expr</keyword>
+      <keyword>stmt</keyword>
+      <keyword>typed</keyword>
+      <keyword>untyped</keyword>
+    </context>
+
+    <!-- larger constructs on top, simple elements below -->
+    <context id="nim" class="no-spell-check">
+      <include>
+        <context ref="error"/> <!-- early warnings -->
+        <context ref="addrcast"/>
+        <context ref="multiline-comment"/>
+        <context ref="multiline-triple-quoted-string"/>
+        <context ref="comment"/>
+        <!--context ref="type-decls"/-->
+        <context ref="double-quoted-raw-string"/>
+        <context ref="double-quoted-string"/>
+        <context ref="cast"/>
+        <context ref="call"/>
+        <context ref="typecon"/>
+        <context ref="used-types"/>
+        <context ref="qualified-method-calls"/>
+        <context ref="pragma"/>
+        <!--context ref="command"/-->
+        <context ref="float64_lit"/>
+        <context ref="float32_lit"/>
+        <context ref="float0_lit"/>
+        <context ref="uint120_lit"/>
+        <context ref="int120_lit"/>
+        <context ref="int0_lit"/>
+        <context ref="boolean"/>
+        <context ref="keywords"/>
+
+        <context ref="types"/>
+        <context ref="operators"/>
+        <context ref="single-quoted-char"/>
+				<context ref="brackets"/>
+
+        <!--context ref="type-decls"/-->
+
+				<!--
+        <context ref="indent-pat0"/>
+        <context ref="indent-pat12"/>
+        <context ref="indent-pat8"/>
+				<context ref="indent-pat4"/>
+				-->
+      </include>
+    </context>
+
+  </definitions>
+</language>

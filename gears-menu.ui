@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <menu id="menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_HSplit</attribute>
+        <attribute name="action">win.hsplit</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_VSplit</attribute>
+        <attribute name="action">win.vsplit</attribute>
+			</item>
+      <item>
+        <attribute name="label" translatable="yes">_MarkTarget</attribute>
+        <attribute name="action">win.markTargetAction</attribute>
+			</item>
+		</section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_CloseTab</attribute>
+        <attribute name="action">win.closetabAction</attribute>
+      </item>
+		</section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_SaveAs</attribute>
+        <attribute name="action">win.saveAsAction</attribute>
+      </item>
+		</section>
+
+  </menu>
+</interface>

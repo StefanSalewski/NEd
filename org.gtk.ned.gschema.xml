@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/org/gtk/ned/" id="org.gtk.ned">
+    <key name="font" type="s">
+      <default>'Monospace 12'</default>
+      <summary>Font</summary>
+      <description>The font to be used for content.</description>
+    </key>
+    <key name="style" type="s">
+      <default>''</default>
+      <summary>Style</summary>
+      <description>Style.</description>
+    </key>
+    <key name="styleschemesettingsid" type="s">
+      <default>'classic'</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="fontsettingsid" type="s">
+      <default>'classic'</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="showtabs" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="autoindent" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="wordboundaries" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="regexenabled" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="wraparound" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="casesensitive" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="showlinenumbers" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="scrollbaroverlay" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="scrollbarautomatic" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="reusedefinition" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+		</key>
+    <key name="smartbackspace" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+		</key>
+    <key name="spacetabs" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+		</key>
+    <key name="linespace" type="i">
+      <default>0</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="tabwidth" type="i">
+      <default>2</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="indentwidth" type="i">
+      <default>2</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="rightmargin" type="i">
+      <default>80</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+    <key name="showrightmargin" type="b">
+      <default>true</default>
+      <summary>Show words</summary>
+      <description>Whether to show a word list in the sidebar</description>
+    </key>
+  </schema>
+</schemalist>

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.8 -->
+  <object class="GtkAdjustment" id="adjustlinespace">
+    <property name="upper">8</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+	</object>
+  <object class="GtkAdjustment" id="adjustrightmargin">
+    <property name="lower">1</property>
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+	</object>
+  <object class="GtkAdjustment" id="adjusttabwidth">
+    <property name="lower">1</property>
+    <property name="upper">32</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+	</object>
+  <object class="GtkAdjustment" id="adjustindentwidth">
+    <property name="lower">-1</property>
+    <property name="upper">32</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+	</object>
+
+  <template class="NedAppPrefs" parent="GtkDialog">
+    <property name="title" translatable="yes">Preferences</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="vbox">
+        <child>
+          <object class="GtkGrid" id="grid">
+            <property name="visible">True</property>
+            <property name="margin">6</property>
+            <property name="row-spacing">12</property>
+						<property name="column-spacing">6</property>
+
+            <child>
+              <object class="GtkLabel" id="fontlabel">
+                <property name="visible">True</property>
+                <property name="label">_Font:</property>
+                <property name="use-underline">True</property>
+                <property name="mnemonic-widget">font</property>
+                <property name="xalign">1</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFontButton" id="font">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">0</property>
+              </packing>
+						</child>
+
+            <child>
+              <object class="GtkLabel" id="styleSchemeLabel">
+                <property name="visible">True</property>
+                <property name="label">_Style:</property>
+                <property name="use-underline">True</property>
+                <property name="mnemonic-widget">style</property>
+                <property name="xalign">1</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSourceStyleSchemeChooserButton" id="style">
+                <property name="visible">True</property>
+                <property name="sensitive">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
+              </packing>
+						</child>
+
+            <child>
+              <object class="GtkLabel" id="linespaceLabel">
+                <property name="visible">True</property>
+                <property name="label">_LineSpace:</property>
+                <property name="use-underline">True</property>
+                <property name="mnemonic-widget">style</property>
+                <property name="xalign">1</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">2</property>
+              </packing>
+            </child>
+						<child>
+							<object class="GtkSpinButton" id="linespace">
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="input_purpose">number</property>
+								<property name="adjustment">adjustlinespace</property>
+								<property name="numeric">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">2</property>
+                <property name="width">1</property>
+              </packing>
+						</child>
+
+            <child>
+              <object class="GtkLabel" id="tabwidthLabel">
+                <property name="visible">True</property>
+                <property name="label">_TabWidth:</property>
+                <property name="use-underline">True</property>
+                <property name="mnemonic-widget">style</property>
+                <property name="xalign">1</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">3</property>
+              </packing>
+            </child>
+						<child>
+							<object class="GtkSpinButton" id="tabwidth">
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="input_purpose">number</property>
+								<property name="adjustment">adjusttabwidth</property>
+								<property name="numeric">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">3</property>
+                <property name="width">1</property>
+              </packing>
+						</child>
+
+            <child>
+              <object class="GtkLabel" id="indentwidthLabel">
+                <property name="visible">True</property>
+                <property name="label">_IndentWidth:</property>
+                <property name="use-underline">True</property>
+                <property name="mnemonic-widget">style</property>
+                <property name="xalign">1</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">4</property>
+              </packing>
+            </child>
+						<child>
+							<object class="GtkSpinButton" id="indentwidth">
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="input_purpose">number</property>
+								<property name="adjustment">adjustindentwidth</property>
+								<property name="numeric">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">4</property>
+                <property name="width">1</property>
+              </packing>
+						</child>
+
+            <child>
+              <object class="GtkLabel" id="rightmarginLabel">
+                <property name="visible">True</property>
+                <property name="label">_RightMargin:</property>
+                <property name="use-underline">True</property>
+                <property name="mnemonic-widget">style</property>
+                <property name="xalign">1</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">5</property>
+              </packing>
+            </child>
+						<child>
+							<object class="GtkSpinButton" id="rightmargin">
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="input_purpose">number</property>
+								<property name="adjustment">adjustrightmargin</property>
+								<property name="numeric">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">5</property>
+                <property name="width">1</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="showrightmargin">
+								<property name="label" translatable="yes">Show Right Margin</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">6</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="showtabs">
+								<property name="label" translatable="yes">Show Notebook Tabs</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">7</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="autoindent">
+								<property name="label" translatable="yes">Autoindent</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">8</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="showlinenumbers">
+								<property name="label" translatable="yes">Show Linenumbers</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">9</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+						
+						<child>
+							<object class="GtkCheckButton" id="scrollbaroverlay">
+								<property name="label" translatable="yes">Show Scrollbar as Overlay</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">10</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="scrollbarautomatic">
+								<property name="label" translatable="yes">Automatic Scrollbars</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">11</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="reusedefinition">
+								<property name="label" translatable="yes">Reuse Definition View</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">12</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="smartbackspace">
+								<property name="label" translatable="yes">Smart backspace</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">13</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="spacetabs">
+								<property name="label" translatable="yes">Insert spaces instead of tabs</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">14</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="casesensitive">
+								<property name="label" translatable="yes">Search Case Sensitive</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">15</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="wraparound">
+								<property name="label" translatable="yes">Search Wrap Around</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">16</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="regexenabled">
+								<property name="label" translatable="yes">Search Regex</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">17</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+						<child>
+							<object class="GtkCheckButton" id="wordboundaries">
+								<property name="label" translatable="yes">Search Word Boundaries</property>
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="receives_default">False</property>
+								<property name="xalign">0</property>
+								<property name="active">True</property>
+								<property name="draw_indicator">True</property>
+							</object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">18</property>
+                <property name="width">2</property>
+              </packing>
+						</child>
+
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

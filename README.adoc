@@ -1,0 +1,411 @@
+== NEd (Nim Ed)
+:experimental:
+:imagesdir: http://ssalewski.de/tmp
+(c) Stefan Salewski +
+Version 0.4, 20-NOV-2017
+
+NOTE: This version is nearly identical with the original one from github.com/ngtk3 but
+uses the never oldgtk3 low level GTK 3.22 bindings. The original ngtk3 GTK 3.20 low level bindings
+can be regarded as deprecated and will be deleted at some point in the future. Also note that now the
+gintro package provides high level GTK3 bindings, so you may not regard this
+program as an up to date GTK3 example. 
+
+NEd is a simple GTK3 text editor with special support for the Nim programming
+language. It supports syntax highlighting and permanent extended symbol info
+displayed on the statusbar at the bottom like symbol origin and procedure
+parameters. Checking for errors is very fast, and extended error information is
+displayed as tooltips. Plain text search is supported by smart symbol search
+with optional replace. For each symbol you can display its definitions with
+source code. Splitting the display horizontally or vertically in unlimited
+number of views is supported, including multi-view display of a single text
+file.
+
+=== Visual appearance
+
+image::ned_0.2.png[]
+
+You can optionally hide notebook tabs, scrollbars and line number display.
+
+=== Introduction
+
+This program was started as one more test and example of the
+https://github.com/ngtk3[GTK3 bindings] for the http://nim-lang.org[Nim]
+programming language, but has evolved fast to a nice and useful tool for Nim
+development. Its primary target is GNU/Linux -- it may work also on other
+operating systems including Windows or macOSX, but that is untested and will
+currently not be active supported by the original author.
+
+If you have no intention coding in Nim language or absolutely do not like the
+GTK3 GUI toolkit, then this software is definitely not for you. In the best
+case you actually consider doing some GTK3 GUI coding yourself, but that is optional.
+And it should be clear that this tool can not really compare with powerful
+editors like _Vim_ or _Emacs_ or proprietary editors. Maybe in a later stage
+it can become comparable to _GEdit_, the default Gnome/GTK editor. Well not
+really, https://www.openhub.net/[OpenHub] reports 100k lines of _C_ code for
+GEdit, while this tool has currently less than 2k lines of Nim code, and it
+will never have more than a few thousand lines:-)
+
+The largest benefits of this tool is the full nimsuggset integration and easy
+customization by hacking the source code.
+
+http://www.gtk.org/[GTK] is not very popular currently -- mailing lists and IRC have very low
+activity, which makes it really hard to find community support for coding
+problems. Some reasons for this may be that GTK is not really cross platform
+with native look and feel, and that it's object oriented design coded in plain
+C is a bit strange. But on the other hand its C _API_ makes language bindings
+easily available for many programming languages.
+
+The currently used oldgtk3 GTK3 bindings for Nim are not really high level. This means that the
+GTK3 widgets can not be extended in the same way as Nim objects, and that it
+can be necessary to free objects or memory manually. Both is not really a big
+problem, we can use _GObject_ macro system to subclass widgets, we can put
+widgets into Nim object or create other references between Nim objects and GTK
+widgets, maybe with hash maps. Or we may use
+`g_object_set_data()/g_object_get_data()` to extend widgets derived from
+GObject base class with custom data. And manual memory deallocation is only
+necessary in rare cases, because GTK uses reference counting: Widgets are
+generally put into containers like boxes or windows -- when the containers are
+destroyed the children are unreferenced and destroyed automatically. This works
+not bad in C, and works in Nim also. The low level structure of the oldgtk3
+GTK3 bindings has the advantage, that the Nim code has the same basic structure
+as C code, so the available C examples can be used as guides. For example this
+tool is based on _GTK_Source_View_ C examples and Gnome application
+examples.footnote:[https://developer.gnome.org/gtk3/stable/ch01s04.html#id-1.2.3.12.5]
+
+Maybe later someone will port NEd to the high level gintro bindings.
+
+The biggest problem is unfortunately that we need some knowledge of GTK3 and
+the related libraries when we intent to do serious GUI development. The C API
+documentation is really not that bad, but it is large and learning it can take
+some time and effort.
+
+=== Install
+
+Currently this editor is only tested on 64 bit _GNU/Linux_ with GTK 3.22 (_Gentoo
+AMD64_). You need a working Nim compiler (version 0.17.2 or higher) and a
+working installation of Nim's _nimsuggest_ tool. And GTK 3.22 or higher and
+related packages, including GtkSourceView and maybe additional the related
+developer files.
+
+This repository uses the oldgtk3 nimble package.
+
+Install through Nim's package Manager Nimble is currently not supported due to
+name conflicts with old legacy GTK2 packages which are part of Nim's standard
+software base.
+
+To install oldgtk3 package and NEd editor open a terminal window and execute
+these commands:
+
+----
+nimble install oldgtk3
+git clone https://github.com/stefansalewski/NEd
+cd NEd
+bash ./make_it
+----
+
+The `make_it` build script is necessary because we have to generate resource
+files from the XML source files for the _GUI_. That script calls _gcc_ C compiler,
+you may try to modify it for clang. And you may add option `-d:release` to get
+a smaler and faster executable without included debugging code.
+
+Note: This tool uses Gnome's gsettings for permanently storing user
+preferences. To reset these states this command can be used:
+
+`gsettings --schemadir "." reset-recursively "org.gtk.ned"''
+
+Maybe you want to try the included color scheme and syntax highlight _XML_
+file? In that case you may consult the `gedit` instructions. On my Linux box I
+put these file where the other GtkSourceView files reside:
+
+----
+# as root
+cp nimdark1.xml /usr/share/gtksourceview-3.0/styles/
+cp nim.lang /usr/share/gtksourceview-3.0/language-specs/
+----
+
+That nim.lang file contains code to generate vertical bars to indicate
+indentation, which may look ugly with other color schemes. For that case, just
+remove these lines at the bottom of file `nim.lang`:
+
+----
+<context ref="indent-pat0"/>
+<context ref="indent-pat12"/>
+<context ref="indent-pat8"/>
+<context ref="indent-pat4"/>
+----
+
+Or you may try the syntax-highlighting file from https://github.com/nim-lang/Aporia[Aporia Editor].
+
+=== Launching the Editor
+
+----
+./ned file1.nim file2.nim
+----
+
+Unfortunately you can launch it for testing only this way, from inside its directory.
+When that test is sucessfull, and you intend to really use it, then installing the
+gsettings configuration is necessary. One method would be this:
+
+----
+# And for making gsettings available system wide one method is, as root
+# https://developer.gnome.org/gio/stable/glib-compile-schemas.html
+# echo $XDG_DATA_DIRS
+# /usr/share/gnome:/usr/local/share:/usr/share:/usr/share/gdm
+# cd /usr/local/share/glib-2.0/schemas
+# cp org.gtk.ned.gschema.xml .
+# glib-compile-schemas .
+#
+----
+
+Unfortunately that can be done only with administrator rights, and I don't know
+how it could be done on Windows or Mac. 
+
+=== Using the Editor
+
+The title bar of the _Gnome Desktop_ should display a _NEd_ menu with a _Preferences_ item,
+which allows
+you to select fonts and color schemes, and other configuration options.
+Proportional fonts are supported, but some have tiny spaces unfortunately. You
+may try the _Input_ font series, which are free of charge for personal use.
+For medium size (27") 4k displays the overpass fonts look nice, I am using them for the whole
+Gnome desktop currently. The
+preferences dialog allows to tune display of line numbers, notebook tabs and
+scrollbars. And you can change some search options. The _Gears_ menu on the
+top right of the main window has entries for splitting the current view vertically
+or horizontally -- you can change the size of the split views with an invisible
+slider. And you can reposition notebook tabs by grabbing the tab with the
+textual label and moving it onto other tabs (drag and drop). (That does not
+work when tabs are hidden, and needs some skills: Mouse pointer changes shape
+when drop position is reached.) Generally new views are opened in the
+notebookfootnote:[A _Notebook_ is the container widget which displays one of multiple
+files stacked on each other, clicking on the tabs above the text display
+switches the visible text files.] which contains the last active view -- the
+one which had focus (input cursor ) recently. If the active view has title
+_Unsaved_ and contains no text, that one is used for the new file. (Remember,
+it has to be active, so you may have to click into that text area before to
+indicate that you really want to fill that one.) If you try to open an
+already opened file again, you will get a new view of that file using the
+already existing test buffer. Generally you use a different notebook for that
+so that both views are visible at the same time and you can edit the buffer
+at different locations.
+
+For vertical scrolling you can use the mouse wheel, the slider at the right
+side of the text, or keyboards keys. Pressing the right mouse button opens a
+context menu with _cut/copy/past_ and _undo_ support.
+
+Most functionality is provided by _GtkSourceView_ and related widgets, that
+includes text input, cursor movement, scrolling, selecting text with the mouse
+and much more.
+
+You may enter search terms into the search text entry -- occurrences are
+highlighted immediately in the text area. If you enter a number prefixed with
+':' view will scroll to that line. If the cursor is in the text area, you may
+press `Ctrl /` to activate the search entry -- pressing `Return` key brings you
+back into text area
+
+`Ctrl+G` and `Ctrl+Shift+G` scrolls to next or previous occurrence. Or you can use
+`Ctrl+F` in the text area to find the word under the cursor or the selected text.
+Pressing `Ctrl+F` again turns of highlight.
+
+=== Keyboard Shortcuts
+
+Many useful _keyboard shortcuts_ are already defined by GTK itself. These are
+listed in the table below. I tried not to modify these predefined ones,
+because you may be already familiar with it. The Nim specific shortcuts
+are explained in detail below this table.
+
+.Nim Keyboard Shortcuts
+|===
+2+|*Nimsuggest*
+|Check for Errors|Ctrl+E
+|What is, Goto Definition|Ctrl+W
+|Suggestions|Ctrl+Space
+|Symbol Use|Ctrl+U
+|Symbol Replace|Ctrl+R
+|Show Proc Parameters|Ctrl+P
+|Goto Next mark|Ctrl+N
+|Goto Previous mark|Ctrl+Shift+N
+|===
+
+.Predefined GTK Keyboard Shortcuts
+// This list is from gedit docs, with gedit specific command commented out
+|===
+2+|*General*
+|Maximize window|Alt+Up Arrow
+|Unmaximize window|Alt+Down Arrow
+|Maximize window in the left|Alt+Left Arrow
+|Maximize window in the right|Alt+Right Arrow
+|Toggle view mode, hide cursor|F7
+2+|*Notebook tab-related Shortcuts*
+|Switch to the next tab to the left|Ctrl+Alt+PageUp
+|Switch to the next tab to the right|Ctrl+Alt+PageDown
+//|Close tab|Ctrl+W
+//|Save all tabs|Ctrl+Shift+L
+//|Close all tabs|Ctrl+Shift+W
+//|Reopen the most recently closed tab|Ctrl+Shift+T
+//|Jump to nth tab|Alt+ n
+//|New tab group|Ctrl+Alt+N
+//|Previous tab group|Shift+Ctrl+Alt+Page up
+//|Next tab group|Shift+Ctrl+Alt+Page down
+2+|*Shortcut keys for working with files*
+//|Create a new document in a new window|Ctrl+N
+//|Create a new document in a new tab|Ctrl+T
+//|Open a document|Ctrl+O
+//|Open the Quick Open window|Alt+O
+//|Save the current document|Ctrl+S
+//|Save the current document with a new filename|Ctrl+Shift+S
+//|Print the current document|Ctrl +P
+//|Print preview|Ctrl+Shift+P
+//|Close the current document|Ctrl+W
+|Quit program|Ctrl+Q
+2+|*Shortcut keys for editing files*
+|Move to the beginning of the current line|Home
+|Move to the end of the current line|End
+|Move to the beginning of the document|Ctrl+Home
+|Move to the end of the document|Ctrl+End
+|Move the selected word right one word|Alt+Right Arrow
+|Move the selected word left one word|Alt+Left Arrow
+|Select text to the left|Shift+Left Arrow
+|Select text to the right|Shift+Right Arrow
+|Undo the last action|Ctrl+Z
+|Redo the last undone action|Ctrl+Shift+Z
+|Cut the selected text or region and place it on the clipboard|Ctrl+X
+|Copy the selected text or region onto the clipboard|Ctrl+C
+|Paste the contents of the clipboard|Ctrl+V
+|Select all text in the file|Ctrl+A
+|Delete the current line|Ctrl+D
+|Move the selected line up one line|Alt+Up Arrow
+|Move the selected line down one line|Alt+Down Arrow
+|Add a tab stop|Tab
+|Remove a tab stop|Shift+Tab
+//|Convert the selected text to upper case|Ctrl+U
+//|Convert the selected text to lower case|Ctrl+L
+//|Toggle case of the selected text|Ctrl+~
+//2+|*Shortcut keys for showing and hiding panes*
+//|Show / hide the side pane|F9
+//|Show / hide the bottom pane|Ctrl+F9
+//|Open the file menu|F10
+2+|*Shortcut keys for searching*
+|Find a string|Ctrl+F
+|Find the next instance of the string|Ctrl+G
+|Find the previous instance of the string|Ctrl+Shift+G
+//|Search and Replace|Ctrl+H
+//|Clear highlight|Ctrl+Shift+K
+//|Goto line|Ctrl+I
+//2+|*Shortcut keys for tools*
+//|Check spelling|Shift+F7
+//|Remove trailing spaces (with plugin)|Alt+F12
+//|Run "make" in the current directory (with plugin)|F8
+//|Directory listing (with plugin)|Ctrl+Shift+D
+//2+|*Shortcut keys for user help*|
+//|Open the gedit user guide|F1
+|===
+
+Shortcuts are not user customizable currently -- I am not sure if there would
+be a real advantage, but of course we may add that later.
+
+The editor itself adds currently these keyboard bindings:
+
+* kbd:[Ctrl W] : _Goto definition_ or _What is_: Place cursor over a proc name
+and press kbd:[Ctrl W] -- a new tab opens and cursor jumps to that name. If an
+empty view titled _Unnamed_ is available, that one is used. If you select `Reuse
+Definition View` in preferences, than an existing definition view is reused,
+otherwise new views are opened. If more than one notebook are open, then you
+can select which of these are used for new definition views: Click into one of
+the views of the desired notebook, and then use `Mark Target` from `Gears`
+menu. Later we may add variants of this `Goto Definition` functionality, maybe
+tooltip display of relevant block only.
+
+* kbd:[Ctrl E] : Check source code for errors and mark these with gutter marks,
+underlining and tooltip description. Error message is displayed when mouse
+pointer hovers above underlined symbols. You can press `Ctrl+N` or
+`Ctrl+Shift+N` to jump to next or previous error position
+
+* kbd:[Ctrl F] : Find (highlight) word under cursor or selected text. Press
+again to toggle. `Ctrl+G` or `Ctrl+Shift+G` jumps to next or previous position.
+
+* kbd:[Ctrl Space] : If cursor is located over a period, then nimsuggest tries
+to suggest _methods_. Try `1.2.` which should offer `min`, `max` and other
+float related proc names. If cursor is not located on the right of a period,
+then GtkSourceView calls its word provider to suggest word completions. Type
+`pro` and you should get `procs`.
+
+* kbd:[Ctrl U] : Usage of symbols. This is some form of smart search, for
+example
+you may use it to highlight all occurrences of a variable in a proc. Words with
+the same text characters but different meaning are not highlighted. `Ctrl+N` or
+`Ctrl+P` jumps to next or previous occurrence, pressing `Ctrl+U` again toggles
+highlight.
+
+* kbd:[Ctrl R] : like `Ctrl+U` but with optional replace. First press does
+highlight,
+next press replaces the symbols with the content of the entry in the top right.
+This function offered by nimsuggest can do replace operations project wide, but
+this editor restricts the operation to the current file only. Project wide
+operations would be not hard to support, but may be a bit dangerous and may break
+other projects.
+
+* kbd:[Ctrl C] : Context. Type a proc name and the opening round bracket --
+then this shortcut key can be used to display proc parameters in the status bar at
+the bottom. If more than one proc with that name exists, then next press shows
+next.
+
+For each language symbol under the text cursor extended information is
+permanently displayed in the status bar at the bottom. That statusbar may be
+used for displaying other informations as well -- less important information
+vanished after a few seconds.
+
+=== Log View
+
+You may name one of your text views `log.txt`, maybe use that name as
+additional parameter when you launch the editor from command line, or create a
+new empty view and use `Save As` from _gears_ menu to change its name to
+`log.txt`. If that one exists, then it is used for logging. Default log level
+is `warn` which means that warnings and error messages are logged. The search
+entry can be used to modify log level -- type `--` followed by `error`, `warn`,
+`log` or `debug`. Press `Return` to activate that level. `--log` level may give
+many message, `--debug` even more.
+
+=== What is missing
+
+You may miss the ability to compile and execute programs from within the
+editor. Personally I have no demand for that. While it would be not
+difficult to add that functionality, it is not very interesting and
+needs some effort, because setting of compiler options and program parameters
+should be possible in the GUI. I may add that later if there really is a demand for that.
+
+Of course more editing functions may be desired, but I do not intent to add
+too many arbitrary stuff which most people will not use. This editor should
+remain a simple, easy tool with a clean GUI and without too many keyboard shortcuts.
+For very special, rarely used task we can always use tools like _vim_ or _sed_.
+
+=== Final words
+
+The tool is still in an early stage and is not much tested yet. If you should
+decide to use it already for serious work, then you should always keep backups
+of your source files, and you should use additional tools like `diff` to prove
+source code integrity often by comparing latest edits with recent verified
+backup.
+
+While `nimsuggest` is a great tool, it has a few bugs still, which may even
+crash the program. Other bugs may lead to crashes also, so save your work
+often. After a crash it may be not possible to restart nimsuggest immediately,
+which may gave new crashes. After about one minute it should be possible to
+restart the tool. The reason for this strange behavior is inter process
+socket communication -- the editor uses sockets to exchange data with nimsugest
+process, and when a crash occurs, the old persisting communication ports block
+new one for some time.
+
+The `GTK` related parts seems to work well in most cases. When using split
+views and hidden scroll bars I got GTK error messages sometimes -- that seems
+to be a bug in GTK which is not really critical and seems to be fixed in latest
+GTK 3.22 development version.
+
+Generally it would be possible to get all the highlight information from nimsuggest. I
+already have a local version of NEd which does that -- it works fine, but CPU load is really 
+high because for nearly each keystroke nimsuggests has to update highlight.
+
+As I said earlier, we may consider porting NEd to use the high level gintro bindings later. I guess that will
+be some work, maybe about 100 hours, because we may have to add some missing functionallity to gintro package still.
+
+

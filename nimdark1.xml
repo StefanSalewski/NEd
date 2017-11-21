@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- dark color scheme for Nim
+     S. Salewski, 29-NOV-2016
+-->
+
+<style-scheme id="nimdark1" _name="Nim dark 1" version="1.0">
+  <author>Salewski, Stefan</author>
+  <_description>Plain dark color scheme</_description>
+
+  <!-- Palette -->
+  <color name="red"      value="#e22"/>
+  <color name="green"    value="#6c6"/>
+  <color name="blue"     value="#68d"/>
+  <color name="cyan"     value="#5dd"/>
+  <color name="mint"     value="#9dd"/>
+  <color name="purple"   value="#c6c"/>
+  <color name="yellow"   value="#dd0"/>
+  <color name="brown"    value="#db5"/>
+  <color name="orange"   value="#db5"/>
+
+  <color name="grey"     value="#888"/>
+  <color name="white"    value="#eee"/>
+  <color name="black"    value="#000"/>
+
+  <color name="undef"    value="#555"/>
+  <color name="indent"   value="#181828"/>
+  <color name="fground"  value="#eee"/>
+  <color name="bground"  value="#000"/>
+
+  <!-- Global Settings -->
+  <style name="text"                            foreground="fground" background="bground"/>
+  <style name="selection"                       background="grey"/>
+  <style name="cursor"                          foreground="white"/>
+  <style name="current-line"                    background="bground"/>
+  <style name="line-numbers"                    foreground="grey" background="indent"/>
+  <style name="draw-spaces"                     foreground="grey"/>
+  <style name="background-pattern"              background="grey"/>
+  <style name="current-line-number"             foreground="fground" bold="true"/>
+
+  <!-- Bracket Matching -->
+  <style name="bracket-match"                   foreground="purple" bold="false"/>
+  <style name="bracket-mismatch"                background="green" foreground="red"/>
+
+  <!-- Right Margin -->
+  <style name="right-margin"                    foreground="#ffffff" background="#ffffff"/>
+
+  <!-- Search Matching -->
+  <style name="search-match"                    background="yellow"/>
+
+  <!-- Bookmarks FIXME -->
+  <style name="bookmark"                        background="white"/>
+
+  <!-- Comments -->
+  <style name="def:comment"                     foreground="green"/>
+  <style name="def:shebang"                     foreground="undef"/>
+  <style name="def:doc-comment"                 foreground="undef"/>
+  <style name="def:doc-comment-element"         foreground="undef"/>
+
+  <!-- Constants -->
+  <style name="def:constant"                    foreground="undef"/>
+  <style name="def:character"                   foreground="undef"/>
+  <style name="def:string"                      foreground="orange"/>
+  <style name="def:special-char"                foreground="purple"/>
+  <style name="def:number"                      foreground="undef"/>
+  <style name="def:floating-point"              foreground="undef"/>
+  <style name="def:decimal"                     foreground="orange"/>
+  <style name="def:base-n-integer"              foreground="undef"/>
+  <style name="def:complex"                     foreground="undef"/>
+  <style name="def:special-constant"            foreground="undef"/>
+  <style name="def:boolean"                     foreground="orange"/>
+
+  <!-- Identifiers -->
+  <style name="def:identifier"                  foreground="fground"/>
+  <style name="def:function"                    foreground="undef"/>
+  <style name="def:builtin"                     foreground="mint"/>
+
+  <!-- Statements -->
+  <style name="def:statement"                   foreground="grey"/>
+  <style name="def:operator"                    foreground="purple"/>
+  <style name="def:keyword"                     foreground="blue"/>
+
+  <!-- Types -->
+  <style name="def:type"                        foreground="cyan"/>
+
+  <!-- Others -->
+  <style name="def:preprocessor"                foreground="purple"/>
+  <style name="def:error"                       foreground="red"/>
+  <style name="def:warning"                     foreground="undef" background="bground"/>
+  <style name="def:reserved"                    background="indent"/>
+  <style name="def:note"                        foreground="bground" background="yellow"/>
+  <style name="def:underlined"                  underline="single"/>
+
+  <!-- Heading styles, uncomment to enable -->
+  <!--
+  <style name="def:heading0"                    scale="5.0"/>
+  <style name="def:heading1"                    scale="2.5"/>
+  <style name="def:heading2"                    scale="2.0"/>
+  <style name="def:heading3"                    scale="1.7"/>
+  <style name="def:heading4"                    scale="1.5"/>
+  <style name="def:heading5"                    scale="1.3"/>
+  <style name="def:heading6"                    scale="1.2"/>
+  -->
+
+  <!-- Language specific styles -->
+  <!-- unfortunately, when we use these names, other styles will not work fine with nim.lang -->
+  <!-- so we map these styles to predefined unused onces -->
+  <!--
+  <style name="nim:call"                       foreground="purple"/>
+  <style name="nim:indent"                     background="indent"/>
+  <style name="nim:qualifier"                  foreground="grey"/>
+  <style name="nim:ws"                         background="yellow"/>
+  <style name="nim:pascal"                     foreground="mint"/>
+  <style name="nim:plain-text"                 foreground="fground"/>
+
+  nim:call        -> def:preprocessor
+  nim:indent      -> def:reserved
+  nim:qualifier   -> def:statement
+  nim:pascal      -> def:builtin
+  nim:plain-text  -> def:identifier
+  -->
+
+</style-scheme>
